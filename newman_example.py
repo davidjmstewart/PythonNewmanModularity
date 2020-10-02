@@ -4,14 +4,14 @@ import sys
 np.set_printoptions(threshold=sys.maxsize)
 
 def communities(B, category, globals):
-    print(globals + 1) # debugging code - globals are the nodes we are looking at for this step 
+    #print(globals + 1) # debugging code - globals are the nodes we are looking at for this step 
 
     I = np.identity(B.shape[0])
     B_transpose = B.transpose()
 
-    # kronecker_sum calculates the kronecker delta * sum of B rows (from equation 6)
+    # kronecker_sum calculates the kroencer delta * sum of B rows (from equation 6)
     kronecker_sum = np.multiply( I , 
-                          np.sum(B_transpose, axis = 1).reshape(B.shape[0],1) # sum up the transpose of B, and turn it into a column vector for the next step
+                          np.sum(B_transpose, axis = 1).reshape(B.shape[0],1) # sum up the tranpose of B, and turn it into a column vector for the next step
                         )
 
     # Compute equation 6
@@ -25,9 +25,8 @@ def communities(B, category, globals):
     leading_eigen_vector = eigen_vectors[:, [index_of_lead]] # extract the column vector representing the leading eigenvector
 
     if np.array_equal(globals + 1, np.array([1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 17, 18, 20, 22])):
-        # indices 0 and 9 of leading_eigen_vector will be negative, they should be positive to place nodes 1 and 12 into the correct group
-        # that would maximise modularity
         place_break_point_here = True
+
 
     # membership vector (place network nodes in 1 group if the same eignevector index is geq to 0, else put into a different group)
     s = np.where(leading_eigen_vector >= 0, 1, -1)
@@ -99,3 +98,11 @@ m = np.sum(degrees)/2
 K = np.outer(degrees, degrees.transpose()[0])
 B = np.subtract(A, K/(2*m))
 [labelled_vertices, label] = communities(B, 0, np.arange(A.shape[0]))
+
+# Change group to whatever group number you want to see the nodes of
+groups = []
+group = 1 # nodes 1 and 12 should not be in this group, but they are!
+for i,label in enumerate(labelled_vertices):
+    if label == group:
+        groups.append(i + 1)
+print(groups)
