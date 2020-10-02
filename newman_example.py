@@ -24,10 +24,6 @@ def communities(B, category, globals):
     index_of_lead = np.where(eigen_values == leading_eigen_value)
     leading_eigen_vector = eigen_vectors[:, [index_of_lead]] # extract the column vector representing the leading eigenvector
 
-    if np.array_equal(globals + 1, np.array([1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 17, 18, 20, 22])):
-        place_break_point_here = True
-
-
     # membership vector (place network nodes in 1 group if the same eignevector index is geq to 0, else put into a different group)
     s = np.where(leading_eigen_vector >= 0, 1, -1)
 
